@@ -22,6 +22,10 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 #Feature
 
-- HomePage
-- Sign In
+- Login/Sign In
+  - Sign In / Sign Up form
+  - redirect Browse page
 - Browse (after authentication) - Header - Main Movie - Trailer in Background - Movie Title and Description - Movie suggestions - MovieList \* n
+- Netflix GPT
+  - SearchBar
+  - Movie Suggestions

@@ -1,6 +1,13 @@
 import { useRef, useState } from "react";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
 import Header from "./Header";
 import { isEmailValid, isPasswordValid, isNameValid } from "../utils/validate";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/appSlice";
 
 const Login = () => {
   const [showSignInForm, setShowSignInForm] = useState(true);
@@ -11,6 +18,8 @@ const Login = () => {
   const email = useRef(null);
   const password = useRef(null);
   const name = useRef(null);
+
+  const dispatch = useDispatch();
 
   const toggleForm = () => {
     setShowSignInForm(!showSignInForm);
@@ -24,9 +33,45 @@ const Login = () => {
 
     setEmailErrorMessage(emailMessage);
     setPasswordErrorMessage(passwordMessage);
-    console.log(name);
-    const nameMessage = isNameValid(name.current ? name.current.value : null);
-    setNameErrorMessage(nameMessage);
+
+    if (!showSignInForm) {
+      const nameMessage = isNameValid(name.current ? name.current.value : null);
+      setNameErrorMessage(nameMessage);
+      if (emailMessage || nameMessage || passwordMessage) return;
+    }
+
+    if (emailMessage || passwordMessage) return;
+
+    if (!showSignInForm) {
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          dispatch(setUser({ user }));
+        })
+        .catch((error) => {
+          const errorMessage = error.message;
+          console.log(errorMessage);
+        });
+    } else {
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          console.log(userCredential);
+          const user = userCredential.user;
+          dispatch(setUser({ user }));
+        })
+        .catch((error) => {
+          const errorMessage = error.message;
+          console.log(errorMessage);
+        });
+    }
   };
 
   return (
@@ -77,7 +122,7 @@ const Login = () => {
               onClick={(e) => handleButtonClick(e)}
               className="bg-red-500 rounded-sm text-white m-2 p-2 mt-5"
             >
-              Sign In
+              {showSignInForm ? "Sign In" : "Sign Up"}
             </button>
           </form>
           <p className="text-gray-500 p-2 mt-10">

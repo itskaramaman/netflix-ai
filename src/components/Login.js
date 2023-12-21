@@ -1,12 +1,16 @@
 import { useRef, useState } from "react";
 import Header from "./Header";
-import { checkValidData } from "../utils/validate";
+import { isEmailValid, isPasswordValid, isNameValid } from "../utils/validate";
 
 const Login = () => {
   const [showSignInForm, setShowSignInForm] = useState(true);
+  const [nameErrorMessage, setNameErrorMessage] = useState(null);
+  const [emailErrorMessage, setEmailErrorMessage] = useState(null);
+  const [PasswordErrorMessage, setPasswordErrorMessage] = useState(null);
 
   const email = useRef(null);
   const password = useRef(null);
+  const name = useRef(null);
 
   const toggleForm = () => {
     setShowSignInForm(!showSignInForm);
@@ -15,8 +19,12 @@ const Login = () => {
   const handleButtonClick = (e) => {
     // Validate the form data
     e.preventDefault();
-    console.log(email.current.value, password.current.value);
-    console.log(checkValidData(email.current.value, password.current.value));
+    const emailMessage = isEmailValid(email.current.value);
+    const passwordMessage = isPasswordValid(password.current.value);
+    const nameMessage = isNameValid(name.current.value);
+    setEmailErrorMessage(emailMessage);
+    setPasswordErrorMessage(passwordMessage);
+    setNameErrorMessage(nameMessage);
   };
 
   return (
@@ -39,19 +47,27 @@ const Login = () => {
               placeholder="Email or phone number"
               className="p-3 m-2 rounded-sm bg-input-gray text-white"
             />
+            <p className="text-sm font-thin ml-2 text-red-500">
+              {emailErrorMessage}
+            </p>
             {!showSignInForm && (
               <input
+                ref={name}
                 type="text"
                 placeholder="Full Name"
                 className="p-3 m-2 rounded-sm bg-input-gray text-white"
               />
             )}
+            <p className="text-sm font-thin ml-2 text-red-500">
+              {nameErrorMessage}
+            </p>
             <input
               ref={password}
               type="password"
               placeholder="Password"
               className="p-3 m-2 rounded-sm bg-input-gray text-white"
             />
+            <p className="text-sm ml-2 text-red-500">{PasswordErrorMessage}</p>
             <button
               onClick={(e) => handleButtonClick(e)}
               className="bg-red-500 rounded-sm text-white m-2 p-2 mt-5"

@@ -18,7 +18,7 @@ export const isPasswordValid = (password) => {
 };
 
 export const isNameValid = (name) => {
-  if (name.trim.length === 0) return "Name should not be empty";
+  if (!name || name.trim().length === 0) return "Name should not be empty";
 
   return null;
 };

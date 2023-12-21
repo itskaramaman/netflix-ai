@@ -21,9 +21,11 @@ const Login = () => {
     e.preventDefault();
     const emailMessage = isEmailValid(email.current.value);
     const passwordMessage = isPasswordValid(password.current.value);
-    const nameMessage = isNameValid(name.current.value);
+
     setEmailErrorMessage(emailMessage);
     setPasswordErrorMessage(passwordMessage);
+    console.log(name);
+    const nameMessage = isNameValid(name.current ? name.current.value : null);
     setNameErrorMessage(nameMessage);
   };
 
@@ -51,16 +53,19 @@ const Login = () => {
               {emailErrorMessage}
             </p>
             {!showSignInForm && (
-              <input
-                ref={name}
-                type="text"
-                placeholder="Full Name"
-                className="p-3 m-2 rounded-sm bg-input-gray text-white"
-              />
+              <>
+                <input
+                  ref={name}
+                  type="text"
+                  placeholder="Full Name"
+                  className="p-3 m-2 rounded-sm bg-input-gray text-white"
+                />
+                <p className="text-sm font-thin ml-2 text-red-500">
+                  {nameErrorMessage}
+                </p>
+              </>
             )}
-            <p className="text-sm font-thin ml-2 text-red-500">
-              {nameErrorMessage}
-            </p>
+
             <input
               ref={password}
               type="password"
